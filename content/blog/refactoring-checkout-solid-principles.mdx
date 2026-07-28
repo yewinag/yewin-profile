@@ -1,0 +1,361 @@
+---
+title: "Refactoring a Checkout System with SOLID Principles (Step by Step)"
+description: "Continue the checkout refactor with SOLID — SRP, OCP, LSP, ISP, and DIP applied step by step to build a scalable architecture."
+date: "2026-07-29"
+---
+
+In the previous article, we refactored a large checkout function using Clean Code principles.
+
+The code became easier to read and maintain.
+
+However, clean code alone isn't enough.
+
+As the application grows, we also need a better architecture.
+
+In this article, we'll refactor the same checkout system using the **SOLID Principles**.
+
+Topics covered:
+
+- Single Responsibility Principle (SRP)
+- Open / Closed Principle (OCP)
+- Liskov Substitution Principle (LSP)
+- Interface Segregation Principle (ISP)
+- Dependency Inversion Principle (DIP)
+
+---
+
+## Step 0 — Initial Checkout Service
+
+Our checkout function is already clean.
+
+However, the architecture still has several problems.
+
+```ts
+class CheckoutService {
+  calculateTotal() {}
+
+  applyCoupon() {}
+
+  saveOrder() {}
+
+  sendEmail() {}
+
+  generateInvoice() {}
+
+  uploadInvoice() {}
+}
+```
+
+Problems:
+
+- Too many responsibilities
+- Hard to extend
+- Tight coupling
+- Difficult to replace implementations
+- Hard to scale
+
+---
+
+## Step 1 — Single Responsibility Principle (SRP)
+
+### Problem
+
+CheckoutService is doing too many things.
+
+- Calculate total
+- Save order
+- Send email
+- Generate invoice
+- Upload invoice
+
+Every feature change affects the same class.
+
+### Refactor
+
+```text
+CheckoutService
+    checkout()
+
+↓
+
+OrderService
+    saveOrder()
+
+↓
+
+EmailService
+    sendEmail()
+
+↓
+
+InvoiceService
+    generateInvoice()
+
+↓
+
+StorageService
+    uploadInvoice()
+```
+
+Now every service has only one responsibility.
+
+---
+
+## Step 2 — Open / Closed Principle (OCP)
+
+### Problem
+
+```ts
+function sendSMS(operator) {
+  if (operator === "MPT") {
+    // ...
+  }
+
+  if (operator === "Ooredoo") {
+    // ...
+  }
+}
+```
+
+Whenever a new operator is added...
+
+```text
+Mytel
+```
+
+...the existing function must be modified.
+
+### Refactor
+
+```text
+SmsProvider
+
+↓
+
+MPTProvider
+
+↓
+
+OoredooProvider
+
+↓
+
+MytelProvider
+```
+
+Adding a new provider doesn't require modifying existing code.
+
+Only create a new provider.
+
+---
+
+## Step 3 — Liskov Substitution Principle (LSP)
+
+### Problem
+
+Parent component expects a button.
+
+```tsx
+<Button />
+```
+
+Later...
+
+```tsx
+<MyButton />
+```
+
+replaces it.
+
+But MyButton doesn't support:
+
+- onClick
+- disabled
+- children
+
+The parent component breaks.
+
+### Refactor
+
+```text
+<Button />
+
+↓
+
+<MyButton />
+```
+
+MyButton follows the same contract as Button.
+
+The parent component doesn't need to change.
+
+---
+
+## Step 4 — Interface Segregation Principle (ISP)
+
+### Problem
+
+A simple button exposes too many props.
+
+```tsx
+<Button
+  href
+  download
+  upload
+  export
+  import
+  onClick
+/>
+```
+
+Most pages only need:
+
+```tsx
+<Button onClick={save} />
+```
+
+Clients shouldn't depend on APIs they don't use.
+
+### Refactor
+
+```text
+Button
+
+↓
+
+LinkButton
+
+↓
+
+IconButton
+```
+
+Each component exposes only the APIs it actually needs.
+
+---
+
+## Step 5 — Dependency Inversion Principle (DIP)
+
+### Problem
+
+The high-level module directly depends on Axios.
+
+```ts
+function UserPage() {
+  axios.get("/users");
+}
+```
+
+Or
+
+```ts
+class CheckoutService {
+  private emailService = new EmailService();
+}
+```
+
+Changing Axios to Fetch or Email to Slack requires modifying high-level code.
+
+### Refactor
+
+```text
+UserPage
+
+↓
+
+UserService
+
+↓
+
+Axios
+```
+
+Now UserPage doesn't know whether UserService uses:
+
+- Axios
+- Fetch
+- GraphQL
+
+The implementation can change without affecting UserPage.
+
+Notification example:
+
+```text
+CheckoutService
+
+↓
+
+NotificationService
+
+↓
+
+EmailService
+
+SlackService
+
+LineService
+```
+
+CheckoutService depends on an abstraction, not a concrete implementation.
+
+---
+
+## Final Architecture
+
+```text
+CheckoutService
+        │
+        ├── OrderService
+        ├── EmailService
+        ├── InvoiceService
+        ├── StorageService
+        └── NotificationService
+```
+
+---
+
+## SOLID Summary
+
+### S — Single Responsibility
+
+One class, one responsibility.
+
+### O — Open / Closed
+
+Open for extension.
+
+Closed for modification.
+
+### L — Liskov Substitution
+
+Replace implementations without breaking existing behavior.
+
+### I — Interface Segregation
+
+Don't force clients to depend on methods or props they don't use.
+
+### D — Dependency Inversion
+
+High-level modules should depend on abstractions rather than concrete implementations.
+
+---
+
+## Final Thoughts
+
+Clean Code improves functions.
+
+SOLID improves architecture.
+
+Together, they create software that is easier to:
+
+- Read
+- Maintain
+- Extend
+- Test
+- Scale
+
+---
+
+## Next Article
+
+Applying the **Strategy Pattern** to the Checkout System

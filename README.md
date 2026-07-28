@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Yewin — Personal Portfolio
+
+A minimal, dark-themed portfolio for a Senior Frontend Engineer. Built for recruiters in Singapore and Thailand.
+
+## Stack
+
+- **Next.js 15+** (App Router)
+- **Tailwind CSS 4**
+- **shadcn/ui**
+- **Framer Motion**
+- **Lucide Icons**
+- **MDX** (blog)
+- **Vercel** (deployment)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Customize Content
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Edit the data files in `src/lib/data/`:
 
-## Learn More
+| File | Content |
+|------|---------|
+| `site.ts` | Name, tagline, links, availability |
+| `experience.ts` | Work history |
+| `projects.ts` | Featured projects |
+| `skills.ts` | Technical skills |
 
-To learn more about Next.js, take a look at the following resources:
+## Blog
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Add MDX posts to `content/blog/` with frontmatter:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```mdx
+---
+title: "Your Post Title"
+description: "Short description"
+date: "2025-06-15"
+---
 
-## Deploy on Vercel
+Your content here...
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Posts appear at `/blog`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy to Vercel
+
+1. Push to GitHub
+2. Import the repo at [vercel.com/new](https://vercel.com/new)
+3. Deploy — no env vars required
+
+Or use the CLI:
+
+```bash
+npx vercel
+```
+
+## Project Structure
+
+```
+src/
+├── app/              # Pages & layout
+├── components/
+│   ├── layout/       # Header, Footer, Section
+│   ├── sections/     # Hero, About, Experience, etc.
+│   ├── motion/       # Framer Motion wrappers
+│   └── ui/           # shadcn/ui components
+└── lib/
+    ├── data/         # Portfolio content
+    └── blog.ts       # MDX blog utilities
+content/
+└── blog/             # MDX blog posts
+```

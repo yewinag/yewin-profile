@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" fill="none">
+  <rect width="1200" height="675" fill="#161618"/>
+  <rect x="1" y="1" width="1198" height="673" stroke="#2a2a2a" stroke-width="2"/>
+  <rect x="0" y="0" width="1200" height="4" fill="#9fef00"/>
+  <text x="60" y="300" fill="#9fef00" font-family="ui-monospace, monospace" font-size="28" font-weight="600">thaiwah 2</text>
+  <text x="60" y="350" fill="#9a9a9a" font-family="ui-monospace, monospace" font-size="18">slide preview · replace with screenshot</text>
+  <text x="60" y="620" fill="#2a2a2a" font-family="ui-monospace, monospace" font-size="14">/public/projects/thaiwah-2.jpg</text>
+</svg>

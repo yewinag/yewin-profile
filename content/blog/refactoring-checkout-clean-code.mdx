@@ -1,0 +1,337 @@
+---
+title: "Refactoring a Checkout Function with Clean Code Principles (Step by Step)"
+description: "Take a messy checkout function and refactor it step by step — readability, small functions, SRP, DRY, pure functions, guard clauses, error handling, and comments."
+date: "2026-07-28"
+---
+
+Writing code that works is only the beginning.
+
+As applications grow, code becomes harder to read, maintain, and extend. In this article, we'll take a **real-world checkout function** and refactor it step by step using common **Clean Code principles**.
+
+We'll improve the same function gradually instead of rewriting everything at once.
+
+**Journey**
+
+Bad Code → Readability → Small Functions → Single Responsibility → DRY → Pure Functions → Guard Clauses → Error Handling → Comments → Final Clean Code
+
+Topics covered:
+
+- Readability
+- Small Functions
+- Single Responsibility
+- DRY (Don't Repeat Yourself)
+- Pure Functions
+- Guard Clauses
+- Error Handling
+- Comments
+
+---
+
+## Step 0 — Initial Bad Code
+
+Let's start with a checkout function that works, but has several code smells.
+
+```ts
+function checkout(user, items, coupon) {
+  let t = 0;
+
+  for (let i = 0; i < items.length; i++) {
+    t += items[i].price * items[i].qty;
+  }
+
+  if (coupon) {
+    if (coupon.type === "PERCENT") {
+      t = t - (t * coupon.value) / 100;
+    } else {
+      t = t - coupon.value;
+    }
+  }
+
+  if (user.vip) {
+    t = t * 0.9;
+  }
+
+  console.log(t);
+
+  saveOrder(user, items, t);
+
+  sendEmail(user.email);
+
+  return t;
+}
+```
+
+Problems:
+
+- Poor variable names
+- Long function
+- Multiple responsibilities
+- Nested conditions
+- Side effects
+- Difficult to maintain
+
+---
+
+## Step 1 — Improve Readability
+
+### Problem
+
+Variable names don't clearly describe their purpose.
+
+**Before**
+
+```ts
+let t = 0;
+```
+
+**After**
+
+```ts
+let totalPrice = 0;
+```
+
+Also improve loop readability.
+
+**Before**
+
+```ts
+items[i]
+```
+
+**After**
+
+```ts
+const item = items[i];
+```
+
+Logic doesn't change. Only readability improves.
+
+---
+
+## Step 2 — Extract Small Functions
+
+The checkout function is doing too much.
+
+Instead of one large function, split it into smaller functions.
+
+**Before**
+
+```ts
+checkout()
+```
+
+**After**
+
+```ts
+calculateTotal()
+
+applyCoupon()
+
+applyVipDiscount()
+```
+
+Each function now has a single purpose.
+
+---
+
+## Step 3 — Single Responsibility
+
+The checkout function shouldn't handle everything.
+
+**Before**
+
+```ts
+checkout()
+
+saveOrder()
+
+sendEmail()
+```
+
+**After**
+
+```text
+checkout()
+
+↓
+
+OrderService.saveOrder()
+
+↓
+
+EmailService.sendEmail()
+```
+
+Now every function has one responsibility.
+
+---
+
+## Step 4 — DRY (Don't Repeat Yourself)
+
+Suppose coupon logic is repeated in multiple places.
+
+**Before**
+
+```ts
+total = total - coupon.value;
+```
+
+(repeated multiple times)
+
+**After**
+
+```ts
+applyCoupon(total, coupon);
+```
+
+Now the logic exists in only one place.
+
+---
+
+## Step 5 — Pure Functions
+
+Avoid functions that change external state.
+
+**Before**
+
+```ts
+function applyCoupon() {
+  console.log(...);
+  saveOrder(...);
+  total = ...;
+}
+```
+
+**After**
+
+```ts
+function applyCoupon(total, coupon) {
+  if (!coupon) return total;
+
+  return total - coupon.value;
+}
+```
+
+A pure function:
+
+- doesn't modify external variables
+- always returns the same output for the same input
+- is easy to test
+
+---
+
+## Step 6 — Guard Clauses
+
+Nested conditions make code harder to read.
+
+**Before**
+
+```ts
+if (coupon) {
+  if (coupon.active) {
+    if (coupon.type === "PERCENT") {
+      // ...
+    }
+  }
+}
+```
+
+**After**
+
+```ts
+if (!coupon) return total;
+
+if (!coupon.active) return total;
+```
+
+Guard clauses reduce nesting and improve readability.
+
+---
+
+## Step 7 — Error Handling
+
+Never assume input is always valid.
+
+**Before**
+
+```ts
+checkout(user);
+```
+
+**After**
+
+```ts
+if (!user) {
+  throw new Error("User not found");
+}
+```
+
+Or use custom errors.
+
+```ts
+throw new UserNotFoundError();
+```
+
+Handle errors as early as possible.
+
+---
+
+## Step 8 — Comments
+
+Comments should explain **why**, not **what**.
+
+**Before**
+
+```ts
+// Calculate total
+const total = calculateTotal(items);
+```
+
+**After**
+
+```ts
+const total = calculateTotal(items);
+```
+
+Good naming often removes the need for comments.
+
+---
+
+## Final Refactored Code
+
+```ts
+function checkout(user, items, coupon) {
+  const total = calculateTotal(items);
+
+  const discountedTotal = applyCoupon(total, coupon);
+
+  const finalTotal = applyVipDiscount(discountedTotal, user);
+
+  saveOrder(user, items, finalTotal);
+
+  sendEmail(user.email);
+
+  return finalTotal;
+}
+```
+
+---
+
+## Final Thoughts
+
+Clean Code isn't about making code shorter.
+
+It's about making code easier to:
+
+- Read
+- Maintain
+- Test
+- Extend
+
+Small improvements made consistently can dramatically improve the quality of a codebase.
+
+---
+
+## Next Article
+
+[Refactoring a Checkout System with SOLID Principles (Step by Step)](/blog/refactoring-checkout-solid-principles)

@@ -1,0 +1,36 @@
+---
+title: "Building Performant UIs for Southeast Asia"
+description: "Notes on shipping fast, accessible frontend experiences across Thailand and the broader APAC region."
+date: "2025-06-15"
+---
+
+Building for Southeast Asia means designing for diversity — device capabilities, network conditions, and user expectations vary widely between fiber-connected urban users and mobile-first audiences across Thailand and Myanmar.
+
+## Performance as a feature
+
+In enterprise products, performance isn't optional. Teams expect sub-second interactions, while many users browse on mid-range Android devices over 4G.
+
+A few principles I follow:
+
+- **Ship less JavaScript.** Route-level code splitting and server components reduce the critical path.
+- **Optimize images aggressively.** Modern formats, responsive sizes, and lazy loading are table stakes.
+- **Measure in the field.** Lab scores are useful; real-user metrics tell the truth.
+
+## Design systems that scale
+
+When multiple squads share a codebase, consistency becomes a force multiplier. A well-structured design system — built on accessible primitives — lets teams move fast without sacrificing quality.
+
+```tsx
+// Small, composable components beat monolithic widgets
+<Button variant="outline" size="sm">
+  Export report
+</Button>
+```
+
+## Accessibility is non-negotiable
+
+WCAG compliance isn't a checkbox for enterprise clients. Keyboard navigation, focus management, and semantic HTML are part of the craft — especially when building financial, loyalty, and admin tools.
+
+---
+
+If you're hiring senior frontend talent in Singapore or Thailand, [get in touch](/#contact).
