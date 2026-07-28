@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto_Mono } from "next/font/google";
+import { Analytics } from "@/components/analytics/google-analytics";
 import { siteConfig } from "@/lib/data/site";
 import "./globals.css";
 
@@ -45,6 +46,7 @@ export default function RootLayout({
       <body className="bg-grid min-h-full flex flex-col font-mono">
         {children}
       </body>
+      <Analytics />
     </html>
   );
 }
